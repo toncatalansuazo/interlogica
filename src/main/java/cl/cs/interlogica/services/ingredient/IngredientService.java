@@ -1,19 +1,20 @@
 package cl.cs.interlogica.services.ingredient;
 
-import cl.cs.interlogica.entities.Ingredient;
-import cl.cs.interlogica.repositories.ingredient.IngredientRepository;
+import cl.cs.interlogica.dto.IngredientDto;
 
+import java.awt.print.Pageable;
 import java.util.List;
+import java.util.Optional;
 
 public interface IngredientService {
 
-    public Ingredient find(Integer id);
+    public Optional<IngredientDto> find(Integer id);
 
-    public List<Ingredient> findAll();
+    public List<IngredientDto> findAll(Pageable pageable);
 
-    public Ingredient save(Ingredient product);
+    public IngredientDto save(IngredientDto product);
 
     public void delete(Integer id);
 
-    public Ingredient update(Ingredient product);
+    public IngredientDto update(IngredientDto ingredient);
 }

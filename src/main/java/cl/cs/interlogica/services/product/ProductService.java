@@ -1,14 +1,16 @@
 package cl.cs.interlogica.services.product;
 
-import cl.cs.interlogica.entities.Product;
+import cl.cs.interlogica.dto.ProductDto;
 
 import java.util.List;
 
 public interface ProductService {
-    Product find(Integer id);
-    List<Product> findAll();
-    Product save(Product product);
-    void delete(Integer id);
-    Product update(Product product);
-    List<Product> findActiveProducts();
+    ProductDto find(Integer id);
+    List<ProductDto> findAll();
+    ProductDto save(ProductDto product);
+    void deleteById(Integer id);
+    ProductDto update(ProductDto product);
+    List<ProductDto> findActiveProducts();
+
+    ProductDto getById(Integer id);
 }

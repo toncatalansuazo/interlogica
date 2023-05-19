@@ -6,6 +6,7 @@ import cl.cs.interlogica.services.ingredient.DefaultIngredientService;
 import cl.cs.interlogica.services.ingredient.IngredientService;
 import cl.cs.interlogica.services.product.DefaultProductService;
 import cl.cs.interlogica.services.product.ProductService;
+import javax.validation.ClockProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -15,8 +16,8 @@ public class InterlogicaServiceConfiguration {
 
     @Bean
     @Primary
-    public ProductService initDefaultProductService(ProductRepository productRepository) {
-        return new DefaultProductService(productRepository);
+    public ProductService initDefaultProductService(ProductRepository productRepository, ClockProvider clockProvider) {
+        return new DefaultProductService(productRepository, clockProvider);
     }
 
     @Bean

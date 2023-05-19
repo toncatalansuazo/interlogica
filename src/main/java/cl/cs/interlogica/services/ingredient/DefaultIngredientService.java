@@ -1,49 +1,48 @@
 package cl.cs.interlogica.services.ingredient;
 
-import cl.cs.interlogica.entities.Ingredient;
+import cl.cs.interlogica.dto.IngredientDto;
+import cl.cs.interlogica.entities.IngredientEntity;
+import cl.cs.interlogica.entities.ProductEntity;
+import cl.cs.interlogica.exceptions.IngredientNotFoundException;
 import cl.cs.interlogica.repositories.ingredient.IngredientRepository;
+import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class DefaultIngredientService implements IngredientService {
-    private IngredientRepository ingredientRepository;
+    private final IngredientRepository ingredientRepository;
 
-    public DefaultIngredientService(IngredientRepository ingredientRepository) {
-        this.ingredientRepository = ingredientRepository;
+    @Override
+    public Optional<IngredientDto> find(Integer id) {
+        return ingredientRepository.findById(id).map(IngredientEntity::toDomain);
     }
 
     @Override
-    public Ingredient find(Integer id) {
-        return ingredientRepository.getOne(id);
+    public List<IngredientDto> findAll(Pageable pageable) {
+        return ingredientRepository.findAll().stream()
+            .map(IngredientEntity::toDomain).collect(Collectors.toList());
     }
 
     @Override
-    public List<Ingredient> findAll() {
-        return ingredientRepository.findAll();
-    }
-
-    @Override
-    public Ingredient save(Ingredient product) {
-        return ingredientRepository.save(product);
+    public IngredientDto save(IngredientDto ingredientDto) {
+        return ingredientRepository.save(ingredientDto.toEntity())
+            .toDomain();
     }
 
     @Override
     public void delete(Integer id) {
-        Optional<Ingredient> product = ingredientRepository.findById(id);
-        if (!product.isPresent()) {
-            // todo wrap in Error object using app  error code
-            throw new Error("Ingredient not found");
-        }
-        ingredientRepository.delete(product.get());
+        IngredientEntity product = ingredientRepository.findById(id)
+            .orElseThrow(() -> new IngredientNotFoundException("Ingredient not found"));
+        ingredientRepository.delete(product);
     }
 
     @Override
-    public Ingredient update(Ingredient product) {
-        Optional<Ingredient> prod = ingredientRepository.findById(product.getId());
-        if (!prod.isPresent()) {
-            // todo wrap in Error object using app  error code
-            throw new Error("Ingredient not found");
-        }
-        return ingredientRepository.save(prod.get());
+    public IngredientDto update(IngredientDto ingredient) {
+        IngredientEntity prod = ingredientRepository.findById(ingredient.getId())
+            .orElseThrow(() -> new IngredientNotFoundException("Ingredient not found"));
+        return ingredientRepository.save(prod).toDomain();
     }
 }
